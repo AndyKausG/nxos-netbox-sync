@@ -8,5 +8,11 @@ export SWITCH_MGMT_IP=""
 export SWITCH_USERNAME=""
 export SWITCH_PASSWORD=""
 
-export TEAMS_TOKEN=""
-export TEAMS_ROOMID=""
+# Notifications
+# export NOTIFY_BACKEND=none           # none | ntfy
+# export NTFY_URL=https://<NTFY_URL>   # ntfy server (self-hosted or ntfy.sh)
+# export NTFY_TOPIC=<NTFY_TOPIC>       # ntfy topic name
+
+# Logging (applied changes only)
+# export LOG_FILE=<LOG_FILE_PATH>      # e.g. /var/log/netbox-sync/changes.log
+                                       # Omit to write to stdout only
