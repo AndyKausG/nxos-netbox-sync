@@ -10,6 +10,12 @@ using [pyATS/Genie](https://developer.cisco.com/pyats/) for live device state an
 extended to support IOS/IOS-XE (Cisco C1000 series) and a safe, read-only-by-default
 execution model. Many thanks to Hank Preston for the original concept and implementation.
 
+> **USE AT YOUR OWN RISK.**
+> This tool can push configuration changes to live network switches.
+> The author assumes no responsibility for outages, data loss, or any other damage
+> caused by running this code in your environment.
+> Always test in a lab before touching production. **You have been warned.**
+
 ---
 
 ## What it does
