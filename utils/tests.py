@@ -218,9 +218,9 @@ def verify_interface_vlans(netbox_interfaces, pyats_interfaces, pyats_vlans):
                 else: 
                     print(f"❌ {interface.name} is NOT configured as a switchport.")
                     results["FAIL"].add(interface)
-        else: 
+        else:
             print(f"❌ {interface.name} MISSING from switch")
-            results["FAIL"].append(interface)
+            results["FAIL"].add(interface)
 
     # Convert results to lists from sets
     results = {

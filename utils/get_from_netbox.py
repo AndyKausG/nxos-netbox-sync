@@ -1,35 +1,34 @@
-import pynetbox
+"""
+utils/get_from_netbox.py — pynetbox helpers.
+
+Use connect() to get an api object, get_device(nb, name) to look up the device.
+All query functions take explicit nb and nb_device parameters.
+"""
 import os
-# import ipaddress
-
-netbox_token = os.getenv("NETBOX_TOKEN")
-netbox_url = os.getenv("NETBOX_URL")
-switch_name = os.getenv("SWITCH_HOSTNAME")
-
-# site_name = os.getenv("NETBOX_SITE")
-# tenant_name = os.getenv("NETBOX_TENANT")
-
-netbox = pynetbox.api(netbox_url, token=netbox_token)
-device = netbox.dcim.devices.get(name=switch_name)
+import sys
+import pynetbox
 
 
-def interfaces_sot(): 
-    interfaces = netbox.dcim.interfaces.filter(device_id=device.id)
-    # for interface in interfaces:
-    #     interface.ip_addresses = netbox.ipam.ip_addresses.filter(
-    #         interface_id=interface.id
-    #     )
-    #     for ip_address in interface.ip_addresses:
-    #         ip_address.ip = ipaddress.ip_address(
-    #             ip_address.address.split("/")[0]
-    #         )
-    #         ip_address.network = ipaddress.ip_network(
-    #             ip_address.address, strict=False
-    #         )
-
-    return interfaces
+def connect():
+    """Connect to Netbox and return a pynetbox.api object."""
+    url = os.environ.get("NETBOX_URL")
+    token = os.environ.get("NETBOX_TOKEN")
+    if not url or not token:
+        print("ERROR: NETBOX_URL and NETBOX_TOKEN environment variables must be set.")
+        sys.exit(1)
+    return pynetbox.api(url, token=token)
 
 
-def vlans_sot(): 
-    vlans = netbox.ipam.vlans.filter(site_id=device.site.id)
-    return vlans 
+def get_device(nb, device_name):
+    """Return the Netbox device record for device_name, or None."""
+    return nb.dcim.devices.get(name=device_name)
+
+
+def interfaces_sot(nb, nb_device):
+    """Return Netbox interfaces for the given device."""
+    return nb.dcim.interfaces.filter(device_id=nb_device.id)
+
+
+def vlans_sot(nb, nb_device):
+    """Return Netbox VLANs for the site the device belongs to."""
+    return nb.ipam.vlans.filter(site_id=nb_device.site.id)
