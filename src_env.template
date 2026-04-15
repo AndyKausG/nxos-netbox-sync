@@ -1,28 +1,28 @@
 # Sample environment variables file for storing key details for the application
 # Usage: cp src_env.template src_env && vi src_env && source src_env
 
-export NETBOX_URL=""
-export NETBOX_TOKEN=""
+# --- Netbox ---
+export NETBOX_URL="https://netbox.example.com"
+export NETBOX_TOKEN="0123456789abcdef0123456789abcdef01234567"
 
-# Device connection details
-# SWITCH_HOSTNAME is used by generate_testbed.py to filter a single device from Netbox
-# SWITCH_MGMT_IP is used by testbed.yaml when not generating from Netbox
-export SWITCH_HOSTNAME=""
-export SWITCH_MGMT_IP=""
-# export SWITCH_MGMT_PORT=""   # Specify SSH port if it is NOT 22
-export SWITCH_USERNAME=""
-export SWITCH_PASSWORD=""
+# --- Device credentials (always required) ---
+export SWITCH_USERNAME="admin"
+export SWITCH_PASSWORD="secret"
 
-# After setting the above, generate testbed.yaml from Netbox:
-#   python generate_testbed.py
-# Or copy the manual template:
-#   cp testbed.yaml.example testbed.yaml  # then edit SWITCH_MGMT_IP etc.
+# --- Testbed: generate from Netbox (recommended) ---
+# SWITCH_HOSTNAME filters generate_testbed.py to a single device by name.
+# SWITCH_MGMT_IP is NOT needed — Netbox provides the IP.
+export SWITCH_HOSTNAME="core-sw"
 
-# Notifications
-# export NOTIFY_BACKEND=none           # none | ntfy
-# export NTFY_URL=https://<NTFY_URL>   # ntfy server (self-hosted or ntfy.sh)
-# export NTFY_TOPIC=<NTFY_TOPIC>       # ntfy topic name
+# --- Testbed: manual testbed.yaml (alternative) ---
+# Only needed if NOT using generate_testbed.py.
+# export SWITCH_MGMT_IP="192.168.1.1"
+# export SWITCH_MGMT_PORT=""   # Specify SSH port only if it is NOT 22
 
-# Logging (applied changes only)
-# export LOG_FILE=<LOG_FILE_PATH>      # e.g. /var/log/netbox-sync/changes.log
-                                       # Omit to write to stdout only
+# --- Notifications (optional) ---
+# export NOTIFY_BACKEND=ntfy           # none | ntfy
+# export NTFY_URL=https://ntfy.sh      # ntfy server (self-hosted or ntfy.sh)
+# export NTFY_TOPIC=netbox-sync-alerts
+
+# --- Logging (optional) ---
+# export LOG_FILE=/var/log/netbox-sync/changes.log   # omit to log to stdout only
