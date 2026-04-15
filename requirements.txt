@@ -1,5 +1,4 @@
-# Python 3.10+ required (pyATS >= 24.x dropped Python 3.9 support)
-# On AlmaLinux 9: dnf install python3.10 or use the container image
+# Requires Python 3.10+
 
 # pyATS + Genie (monolithic install — includes pyats.contrib for testbed generation)
 pyats[full]>=24.0

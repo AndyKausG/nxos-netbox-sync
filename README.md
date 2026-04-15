@@ -74,7 +74,7 @@ Verified Genie parsers (IOS-XE, `os: iosxe`): `show version`, `show vlan brief`,
 
 ## Prerequisites
 
-- Python 3.10+ (pyATS ≥ 24.x requires 3.10; AlmaLinux 9 ships 3.9 — install python3.10 via `dnf` or use the container image)
+- Python 3.10+
 - pyATS / Genie (see `requirements.txt`)
 - A running [Netbox](https://github.com/netbox-community/netbox-docker) instance
 - Device and Device Type must already exist in Netbox before running `import_device.py`
