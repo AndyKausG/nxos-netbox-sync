@@ -63,7 +63,17 @@ def main() -> None:
         url_filter=url_filter,
         topology=True,
     )
-    nb._generate()
+    try:
+        nb._generate()
+    except TypeError:
+        device_hint = f" matching '{hostname}'" if hostname else ""
+        print(
+            f"ERROR: No devices found in Netbox{device_hint}.\n"
+            "       Add devices in Netbox first, then re-run.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
     nb.to_testbed_file(args.output)
     print(f"Done — written to: {args.output}")
 
