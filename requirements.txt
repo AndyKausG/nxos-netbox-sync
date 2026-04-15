@@ -1,4 +1,4 @@
-# Requires Python 3.10+
+# Requires Python 3.12
 
 # pyATS + Genie (monolithic install — includes pyats.contrib for testbed generation)
 pyats[full]>=24.0

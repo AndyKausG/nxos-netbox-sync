@@ -74,7 +74,7 @@ Verified Genie parsers (IOS-XE, `os: iosxe`): `show version`, `show vlan brief`,
 
 ## Prerequisites
 
-- Python 3.10+
+- Python 3.12
 - pyATS / Genie (see `requirements.txt`)
 - A running [Netbox](https://github.com/netbox-community/netbox-docker) instance
 - Device and Device Type must already exist in Netbox before running `import_device.py`
@@ -97,13 +97,24 @@ Host <your-switch>
 
 ## Setup
 
+**Requirements:** Python 3.12
+
 ### 1. Clone and install
 
 ```bash
+# Clone and enter repo
 git clone https://github.com/AndyKausG/nxos-netbox-sync.git
 cd nxos-netbox-sync
-python3 -m venv .venv
+
+# Create venv explicitly with Python 3.12
+python3.12 -m venv .venv
 source .venv/bin/activate
+
+# Verify Python version
+python3 --version  # should show Python 3.12.x
+
+# Install dependencies
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
