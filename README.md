@@ -74,7 +74,7 @@ Verified Genie parsers (IOS-XE, `os: iosxe`): `show version`, `show vlan brief`,
 
 ## Prerequisites
 
-- Python 3.8+
+- Python 3.10+ (pyATS ≥ 24.x requires 3.10; AlmaLinux 9 ships 3.9 — install python3.10 via `dnf` or use the container image)
 - pyATS / Genie (see `requirements.txt`)
 - A running [Netbox](https://github.com/netbox-community/netbox-docker) instance
 - Device and Device Type must already exist in Netbox before running `import_device.py`
@@ -117,19 +117,28 @@ cp testbed.yaml.example testbed.yaml   # then edit testbed.yaml
 
 ```yaml
 # testbed.yaml — not committed, see testbed.yaml.example
+testbed:
+  name: testbed
+  credentials:
+    default:
+      username: "%ENV{SWITCH_USERNAME}"
+      password: "%ENV{SWITCH_PASSWORD}"
+
 devices:
-  core-sw:
-    connections:
-      cli:
-        ip: <management IP>
-        protocol: ssh
-    credentials:
-      default:
-        username: "%ENV{CISCO_USER}"
-        password: "%ENV{CISCO_PASS}"
-    os: iosxe      # use iosxe for C1000 IOS 15.2 — parser coverage is better
+  core-sw:                      # must match --device argument
+    os: iosxe                   # use iosxe for C1000 IOS 15.2 — parser coverage is better
     platform: iosxe
     type: switch
+    connections:
+      default:
+        protocol: ssh
+        ip: "%ENV{SWITCH_MGMT_IP}"   # or hardcode the management IP
+```
+
+**Alternative — generate from Netbox automatically:**
+
+```bash
+python generate_testbed.py     # reads NETBOX_URL, NETBOX_TOKEN, SWITCH_HOSTNAME from src_env
 ```
 
 ### 3. Set environment variables
@@ -144,8 +153,10 @@ Minimum required:
 ```bash
 export NETBOX_URL="https://<your-netbox>"
 export NETBOX_TOKEN="<your-token>"
-export CISCO_USER="<username>"
-export CISCO_PASS="<password>"
+export SWITCH_USERNAME="<username>"
+export SWITCH_PASSWORD="<password>"
+export SWITCH_MGMT_IP="<management-ip>"   # used by testbed.yaml or generate_testbed.py
+export SWITCH_HOSTNAME="<device-name>"    # used by generate_testbed.py to filter Netbox devices
 ```
 
 Optional — notifications via [ntfy](https://ntfy.sh):
@@ -161,6 +172,25 @@ Optional — log applied changes to a file:
 ```bash
 export LOG_FILE=/var/log/netbox-sync/changes.log
 ```
+
+---
+
+## Generate testbed from Netbox
+
+Instead of writing `testbed.yaml` by hand, you can generate it automatically from your
+Netbox inventory using `generate_testbed.py`:
+
+```bash
+# With src_env already sourced:
+python generate_testbed.py
+
+# Writes testbed.yaml in the current directory.
+# SWITCH_HOSTNAME filters to a single device; omit it to pull all devices.
+```
+
+The script uses `pyats.contrib.creators.netbox` (included in `pyats[full]`) to query
+Netbox and produce a testbed with `%ENV{SWITCH_USERNAME}` / `%ENV{SWITCH_PASSWORD}`
+credential placeholders — no credentials are embedded in the file.
 
 ---
 
@@ -225,9 +255,10 @@ confirmation on each cycle (useful for a supervised maintenance window).
 netbox-sync/
 ├── import_device.py        # One-time Switch → Netbox import
 ├── check_device.py         # Main check / apply / loop entrypoint
+├── generate_testbed.py     # Generate testbed.yaml from Netbox (uses pyats.contrib)
 ├── requirements.txt
-├── testbed.yaml            # NOT committed — copy from testbed.yaml.example
-├── testbed.yaml.example    # Template
+├── testbed.yaml            # NOT committed — generate via generate_testbed.py or copy from testbed.yaml.example
+├── testbed.yaml.example    # Manual template (IOS-XE, env-var placeholders)
 ├── src_env.template        # Environment variable template
 ├── templates/              # Jinja2 notification message templates
 └── utils/

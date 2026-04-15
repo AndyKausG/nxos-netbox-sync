@@ -1,12 +1,22 @@
 # Sample environment variables file for storing key details for the application
+# Usage: cp src_env.template src_env && vi src_env && source src_env
+
 export NETBOX_URL=""
 export NETBOX_TOKEN=""
 
+# Device connection details
+# SWITCH_HOSTNAME is used by generate_testbed.py to filter a single device from Netbox
+# SWITCH_MGMT_IP is used by testbed.yaml when not generating from Netbox
 export SWITCH_HOSTNAME=""
 export SWITCH_MGMT_IP=""
 # export SWITCH_MGMT_PORT=""   # Specify SSH port if it is NOT 22
 export SWITCH_USERNAME=""
 export SWITCH_PASSWORD=""
+
+# After setting the above, generate testbed.yaml from Netbox:
+#   python generate_testbed.py
+# Or copy the manual template:
+#   cp testbed.yaml.example testbed.yaml  # then edit SWITCH_MGMT_IP etc.
 
 # Notifications
 # export NOTIFY_BACKEND=none           # none | ntfy

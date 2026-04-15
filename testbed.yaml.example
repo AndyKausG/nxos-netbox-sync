@@ -1,0 +1,39 @@
+# testbed.yaml.example — IOS-XE / C1000 template
+#
+# Two options:
+#   A) Generate automatically from Netbox:
+#        python generate_testbed.py
+#
+#   B) Copy this file and fill in manually:
+#        cp testbed.yaml.example testbed.yaml
+#        # then edit testbed.yaml
+#
+# testbed.yaml is NOT committed to git.
+
+testbed:
+  name: testbed
+  credentials:
+    default:
+      username: "%ENV{SWITCH_USERNAME}"
+      password: "%ENV{SWITCH_PASSWORD}"
+
+devices:
+  core-sw:                          # must match the --device argument passed to check_device.py / import_device.py
+    os: iosxe                       # use iosxe for C1000 IOS 15.2 — parser coverage is better than ios
+    platform: iosxe
+    type: switch
+    connections:
+      default:
+        protocol: ssh
+        ip: "%ENV{SWITCH_MGMT_IP}"  # or replace with a hardcoded IP
+
+# NX-OS example (uncomment and adjust if using NX-OS):
+# devices:
+#   nxos-sw:
+#     os: nxos
+#     platform: n9k
+#     type: switch
+#     connections:
+#       default:
+#         protocol: ssh
+#         ip: "%ENV{SWITCH_MGMT_IP}"
