@@ -118,7 +118,39 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 2. Configure testbed.yaml
+### 2. Set environment variables
+
+```bash
+cp src_env.template src_env   # then edit src_env
+source src_env
+```
+
+Minimum required:
+
+```bash
+export NETBOX_URL="https://<your-netbox>"
+export NETBOX_TOKEN="<your-token>"
+export SWITCH_USERNAME="<username>"
+export SWITCH_PASSWORD="<password>"
+export SWITCH_MGMT_IP="<management-ip>"   # used by testbed.yaml or generate_testbed.py
+export SWITCH_HOSTNAME="<device-name>"    # used by generate_testbed.py to filter Netbox devices
+```
+
+Optional — notifications via [ntfy](https://ntfy.sh):
+
+```bash
+export NOTIFY_BACKEND=ntfy
+export NTFY_URL=https://ntfy.sh        # or self-hosted
+export NTFY_TOPIC=netbox-sync-alerts
+```
+
+Optional — log applied changes to a file:
+
+```bash
+export LOG_FILE=/var/log/netbox-sync/changes.log
+```
+
+### 3. Configure testbed.yaml
 
 Copy the example and fill in your device details:
 
@@ -150,38 +182,6 @@ devices:
 
 ```bash
 python generate_testbed.py     # reads NETBOX_URL, NETBOX_TOKEN, SWITCH_HOSTNAME from src_env
-```
-
-### 3. Set environment variables
-
-```bash
-cp src_env.template src_env   # then edit src_env
-source src_env
-```
-
-Minimum required:
-
-```bash
-export NETBOX_URL="https://<your-netbox>"
-export NETBOX_TOKEN="<your-token>"
-export SWITCH_USERNAME="<username>"
-export SWITCH_PASSWORD="<password>"
-export SWITCH_MGMT_IP="<management-ip>"   # used by testbed.yaml or generate_testbed.py
-export SWITCH_HOSTNAME="<device-name>"    # used by generate_testbed.py to filter Netbox devices
-```
-
-Optional — notifications via [ntfy](https://ntfy.sh):
-
-```bash
-export NOTIFY_BACKEND=ntfy
-export NTFY_URL=https://ntfy.sh        # or self-hosted
-export NTFY_TOPIC=netbox-sync-alerts
-```
-
-Optional — log applied changes to a file:
-
-```bash
-export LOG_FILE=/var/log/netbox-sync/changes.log
 ```
 
 ---
